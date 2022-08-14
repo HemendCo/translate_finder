@@ -53,34 +53,34 @@ use `translate_finder --config local --save` to save current config into a `json
 
 ```json with comments
 {
-    /// directories that will be searched for translations
+    // directories that will be searched for translations
     "selectedDirectories": [
         "components",
         "pages"
     ],
-    /// file extensions that will be searched for translations
+    // file extensions that will be searched for translations
     "supportedExtensions": [
         "vue",
         "js",
         "ts"
     ],
-    /// base directory to look for [selectedDirectories]
+    // base directory to look for [selectedDirectories]
     "workingDirectory": "<SOME-DIR>",
-    /// locales directory containing json file for different languages
+    // locales directory containing json file for different languages
     "localeDirectory": "<SOME-DIR>/locales",
-    /// temp output file for last scan results
+    // temp output file for last scan results
     "outputFile": "translations.json",
-    /// show more information about the scan process
+    // show more information about the scan process
     "isVerbose": true,
-    /// overwrite existing [outputFile]
+    // overwrite existing [outputFile]
     "isForced": true,
-    /// cli will not exit after first full scan process instead it will stay in a loop and watch for changes in the working directory and files
+    // cli will not exit after first full scan process instead it will stay in a loop and watch for changes in the working directory and files
     "watch": true,
-    /// regex pattern to find translations in this case `...$t('some-key')...` will be extracted as `$t('some-key')`
+    // regex pattern to find translations in this case `...$t('some-key')...` will be extracted as `$t('some-key')`
     "regex": "(\\$t\\(([^}{<>\\n])*\\'\\))",  
-    /// select text after matching with given regex pattern with this starting offset by default is 4 because it starts with `$t('`
+    // select text after matching with given regex pattern with this starting offset by default is 4 because it starts with `$t('`
     "startingOffset": 4,
-     /// select text after matching with given regex pattern with this starting offset by default is -2 because it ends with `')`
+     // select text after matching with given regex pattern with this starting offset by default is -2 because it ends with `')`
     "endingOffset": -2
 }
 ```
