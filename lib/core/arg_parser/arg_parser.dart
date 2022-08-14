@@ -164,7 +164,10 @@ set globalConfig(AppConfig config) => File(globalAppConfigPath).writeAsStringSyn
 AppConfig get localConfig => AppConfig.fromJson(File(localAppConfigPath).readAsStringSync());
 set localConfig(AppConfig config) => File(localAppConfigPath).writeAsStringSync(config.toJson());
 
-final appConfigParser = ArgParser(usageLineLength: 155)
+final appConfigParser = ArgParser(
+  usageLineLength: 400,
+  allowTrailingOptions: true,
+)
   ..addMultiOption(
     'extensions',
     defaultsTo: [
@@ -213,8 +216,8 @@ final appConfigParser = ArgParser(usageLineLength: 155)
         exit(64);
       }
     },
-    defaultsTo: r'(\$t\()(.*)(\))',
-    valueHelp: 'regex pattern to find translations',
+    defaultsTo: r"(\$t\(([^}{<>\n])*\'\))",
+    valueHelp: 'regex pattern to find translations default bad-words are one of `}, {, < and >`',
   )
   ..addOption(
     'start_offset',
