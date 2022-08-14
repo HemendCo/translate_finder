@@ -5,6 +5,7 @@ import 'package:args/args.dart';
 class AppConfig {
   AppConfig({
     required this.isVerbose,
+    required this.watch,
     required this.selectedDirectories,
     required this.supportedExtensions,
     required this.workingDirectory,
@@ -13,6 +14,7 @@ class AppConfig {
     required this.regex,
     required this.outputFile,
     required this.isForced,
+    required this.localeDirectory,
   }) : assert(
           supportedExtensions.isNotEmpty,
         );
@@ -25,6 +27,9 @@ class AppConfig {
   final int endingOffset;
   final String outputFile;
   final bool isForced;
+  final bool watch;
+  final String localeDirectory;
+
   factory AppConfig.fromArgs(List<String> args) {
     final commandParser = ArgParser()
       ..addMultiOption(
@@ -60,6 +65,12 @@ class AppConfig {
           }
         },
         defaultsTo: Directory.current.path,
+      )
+      ..addOption(
+        'locale_directory',
+        abbr: 'l',
+        help: 'default address to locales directory',
+        defaultsTo: '${Directory.current.path}/locales',
       )
       ..addOption(
         'regex',
@@ -101,6 +112,13 @@ class AppConfig {
         abbr: 'o',
       )
       ..addFlag(
+        'watch',
+        abbr: 'w',
+        help:
+            'watch for changes in the working directory (this flag will cause the program to run in a loop with force mode on)',
+        defaultsTo: false,
+      )
+      ..addFlag(
         'verbose',
         abbr: 'v',
         defaultsTo: false,
@@ -122,12 +140,14 @@ class AppConfig {
       exit(0);
     }
     final config = AppConfig(
+      watch: parseResult['watch'],
+      localeDirectory: parseResult['locale_directory'],
       selectedDirectories: parseResult['include'],
       isVerbose: parseResult['verbose'] == true,
       supportedExtensions: parseResult['extensions'] ?? [],
       workingDirectory: parseResult['directory'],
       outputFile: parseResult['output'],
-      isForced: parseResult['force'],
+      isForced: parseResult['force'] || parseResult['watch'],
       endingOffset: int.tryParse(parseResult['end_offset']) ?? 0,
       startingOffset: int.tryParse(parseResult['start_offset']) ?? 0,
       regex: RegExp(parseResult['regex']),
