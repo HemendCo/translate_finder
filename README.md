@@ -51,7 +51,7 @@ use `translate_finder -h` for more information.
 
 use `translate_finder --config local --save` to save current config into a `json` file
 
-```json with comments
+```jsonc
 {
     // directories that will be searched for translations
     "selectedDirectories": [
@@ -80,7 +80,7 @@ use `translate_finder --config local --save` to save current config into a `json
     "regex": "(\\$t\\(([^}{<>\\n])*\\'\\))",  
     // select text after matching with given regex pattern with this starting offset by default is 4 because it starts with `$t('`
     "startingOffset": 4,
-     // select text after matching with given regex pattern with this starting offset by default is -2 because it ends with `')`
+    // select text after matching with given regex pattern with this ending offset by default is -2 because it ends with `')`
     "endingOffset": -2
 }
 ```
