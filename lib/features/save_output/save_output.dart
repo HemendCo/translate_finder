@@ -5,10 +5,12 @@ import 'package:trans_finder/core/arg_parser/arg_parser.dart';
 import 'package:trans_finder/core/dependency_injector/basic_dependency_injector.dart';
 import 'package:trans_finder/features/verbose_log/verbose_log.dart';
 
-String _format(String input) {
+String formatOutput(String input) {
   const rules = {
     r"\\'": "'",
+    r"\'": "'",
     r'\\"': '"',
+    r'\"': '"',
     r'\\': r'\',
   };
   String output = input;
@@ -19,7 +21,7 @@ String _format(String input) {
 }
 
 Future<void> saveOutput(Map<String, String> input) {
-  final output = _format(jsonEncode(input));
+  final output = formatOutput(jsonEncode(input));
   final config = deInjector.get<AppConfig>();
   final oFile = File(config.outputFile);
   if (oFile.existsSync()) {
