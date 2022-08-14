@@ -150,12 +150,12 @@ class AppConfig {
 String get globalAppConfigPath {
   final exeFile = File(Platform.resolvedExecutable);
   final exeDir = exeFile.parent.path;
-  return join(exeDir, 'trans_finder_config.json');
+  return join(exeDir, 'translate_finder_config.json');
 }
 
 String get localAppConfigPath {
   final local = Directory.current.path;
-  return join(local, 'trans_finder_config.json');
+  return join(local, 'translate_finder_config.json');
 }
 
 AppConfig get globalConfig => AppConfig.fromJson(File(globalAppConfigPath).readAsStringSync());

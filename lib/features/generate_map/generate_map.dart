@@ -1,4 +1,4 @@
-import 'package:trans_finder/features/verbose_log/verbose_log.dart';
+import 'package:translate_finder/features/verbose_log/verbose_log.dart';
 
 Map<String, String> generateMap(Iterable<String> values) {
   verbosePrint('found total of ${values.length} items');

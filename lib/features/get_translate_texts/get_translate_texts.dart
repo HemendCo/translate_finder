@@ -1,11 +1,11 @@
 import 'dart:io';
 
-import 'package:trans_finder/core/arg_parser/arg_parser.dart';
-import 'package:trans_finder/core/dependency_injector/basic_dependency_injector.dart';
-import 'package:trans_finder/features/verbose_log/verbose_log.dart';
+import 'package:translate_finder/core/arg_parser/arg_parser.dart';
+import 'package:translate_finder/core/dependency_injector/basic_dependency_injector.dart';
+import 'package:translate_finder/features/verbose_log/verbose_log.dart';
 
 import '../file_locator/file_list_locator.dart';
-import '../regex_finder/trans_finder.dart';
+import '../regex_finder/translate_finder.dart';
 
 RegExp? _cachedRegex;
 Iterable<String> getTransTexts([List<String>? overRidingPath]) sync* {

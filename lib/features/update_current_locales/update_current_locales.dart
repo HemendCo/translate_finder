@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:trans_finder/core/arg_parser/arg_parser.dart';
-import 'package:trans_finder/core/dependency_injector/basic_dependency_injector.dart';
-import 'package:trans_finder/features/verbose_log/verbose_log.dart';
+import 'package:translate_finder/core/arg_parser/arg_parser.dart';
+import 'package:translate_finder/core/dependency_injector/basic_dependency_injector.dart';
+import 'package:translate_finder/features/verbose_log/verbose_log.dart';
 
 import '../save_output/save_output.dart';
 

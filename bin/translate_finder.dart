@@ -1,12 +1,12 @@
 import 'dart:io';
 
 import 'package:path/path.dart';
-import 'package:trans_finder/core/arg_parser/arg_parser.dart';
-import 'package:trans_finder/core/dependency_injector/basic_dependency_injector.dart';
-import 'package:trans_finder/features/generate_map/generate_map.dart';
-import 'package:trans_finder/features/get_trans_texts/get_trans_texts.dart';
-import 'package:trans_finder/features/save_output/save_output.dart';
-import 'package:trans_finder/features/update_current_locales/update_current_locales.dart';
+import 'package:translate_finder/core/arg_parser/arg_parser.dart';
+import 'package:translate_finder/core/dependency_injector/basic_dependency_injector.dart';
+import 'package:translate_finder/features/generate_map/generate_map.dart';
+import 'package:translate_finder/features/get_translate_texts/get_translate_texts.dart';
+import 'package:translate_finder/features/save_output/save_output.dart';
+import 'package:translate_finder/features/update_current_locales/update_current_locales.dart';
 
 void main(List<String> arguments) {
   coreApp(arguments);
