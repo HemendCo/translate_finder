@@ -15,7 +15,7 @@ void main(List<String> arguments) {
 void coreApp(List<String> args) {
   final config = AppConfig.fromArgs(args);
   deInjector.register(config);
-  doTheJob();
+  doTheJob(config);
   if (config.watch) {
     activeWatch(config);
   }
@@ -28,7 +28,7 @@ void activeWatch(AppConfig config) {
       print('watching ${dir.path}');
       dir.watch(events: FileSystemEvent.modify).listen((event) async {
         print('change found in ${event.path}');
-        await doTheJob([event.path]);
+        doTheJob(config, [event.path]);
       });
     } else {
       print('cannot watch ${dir.path} because it does not exists');
@@ -36,9 +36,14 @@ void activeWatch(AppConfig config) {
   }
 }
 
-Future<void> doTheJob([List<String>? override]) async {
+Future<void> doTheJob(AppConfig config, [List<String>? override]) async {
   final samples = getTransTexts(override);
   final output = generateMap(samples);
-  await saveOutput(output);
-  updateCurrentLocalesWith(output);
+  if (config.awaitForTasks) {
+    await saveOutput(output);
+    await updateCurrentLocalesWith(output);
+  } else {
+    saveOutput(output);
+    updateCurrentLocalesWith(output);
+  }
 }

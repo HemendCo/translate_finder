@@ -23,26 +23,21 @@ String formatOutput(String input) {
 Future<void> saveOutput(Map<String, String> input) {
   final output = formatOutput(jsonEncode(input));
   final config = deInjector.get<AppConfig>();
-  final oFile = File(config.outputFile);
-  if (oFile.existsSync()) {
-    if (config.isForced) {
-      verbosePrint('output file found but forced to overwrite');
-      return oFile.writeAsString(output);
-    } else {
-      print('output file found do you want to override it? (y/n)');
-      final input = stdin.readLineSync();
-      if (input == 'y') {
-        verbosePrint('output file found but forced to overwrite');
-        return oFile.writeAsString(output);
-      } else {
-        verbosePrint('output file found but not forced to overwrite');
+  final oFile = File(config.tempOutputFile);
 
-        exit(1);
-      }
-    }
-  } else {
-    verbosePrint('output file not found creating one');
-    oFile.createSync();
-    return oFile.writeAsString(output);
-  }
+  // if (config.isForced) {
+  verbosePrint('writing to temp file');
+  return oFile.writeAsString(output);
+  // } else {
+  //   print('output file found do you want to override it? (y/n)');
+  //   final input = stdin.readLineSync();
+  //   if (input == 'y') {
+  //     verbosePrint('output file found but forced to overwrite');
+  //     return oFile.writeAsString(output);
+  //   } else {
+  //     verbosePrint('output file found but not forced to overwrite');
+
+  //     exit(1);
+  //   }
+  // }
 }

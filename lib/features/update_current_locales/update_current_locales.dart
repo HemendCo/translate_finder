@@ -7,24 +7,23 @@ import 'package:translate_finder/features/verbose_log/verbose_log.dart';
 
 import '../save_output/save_output.dart';
 
-void updateCurrentLocalesWith(Map<String, String> update) {
+Future<void> updateCurrentLocalesWith(Map<String, String> update) async {
   final config = deInjector.get<AppConfig>();
   final dir = Directory(config.localeDirectory);
-  if (dir.existsSync()) {
-    final files = dir.listSync(recursive: true);
-    for (final file in files) {
+  if (await dir.exists()) {
+    await for (final file in dir.list(recursive: true)) {
       if (file is File) {
         verbosePrint('found locale file in ${file.path}');
         final fileName = file.path.split('/').last;
         final fileExtension = fileName.split('.').last;
         if (fileExtension == 'json') {
-          final fileContent = Map<String, String>.from(jsonDecode(file.readAsStringSync()));
+          final fileContent = Map<String, String>.from(jsonDecode(await file.readAsString()));
           final fileKeys = fileContent.keys.map((e) => formatOutput(e)).toList();
           final addedKeys = update.keys.map((e) => formatOutput(e)).where((element) => !fileKeys.contains(element));
           for (final i in addedKeys) {
             fileContent[i] = i;
           }
-          file.writeAsStringSync(formatOutput(jsonEncode(fileContent)));
+          await file.writeAsString(formatOutput(jsonEncode(fileContent)));
         }
       }
     }
