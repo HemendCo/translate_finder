@@ -1,0 +1,7 @@
+$t('test with special character \n')
+$t('test with special character \'')
+$t('this `)` will cause the break')
+$t('this `(` will cause the break')
+$t('this `
+    ` will cause the break')
+$t('two items in a line - 0') $t('two items in a line - 1')

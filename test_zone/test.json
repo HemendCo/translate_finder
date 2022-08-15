@@ -1,0 +1,6 @@
+{
+    "test with special character \n": "test with special character \n",
+    "test with special character '": "test with special character '",
+    "two items in a line - 0": "two items in a line - 0",
+    "two items in a line - 1": "two items in a line - 1"
+}
