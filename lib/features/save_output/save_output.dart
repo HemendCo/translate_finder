@@ -5,39 +5,39 @@ import 'package:translate_finder/core/arg_parser/arg_parser.dart';
 import 'package:translate_finder/core/dependency_injector/basic_dependency_injector.dart';
 import 'package:translate_finder/features/verbose_log/verbose_log.dart';
 
-String formatOutput(String input) {
+String _applyRule(String input) {
   const rules = {
     r"\\'": "'",
     r"\'": "'",
     r'\\"': '"',
     r'\"': '"',
+    r'\n': '\n',
+    r'\\n': '\n',
     r'\\': r'\',
   };
-  String output = input;
+  String out = input;
   for (final i in rules.entries) {
-    output = output.replaceAll(i.key, i.value);
+    out = out.replaceAll(i.key, i.value);
+  }
+  return out;
+}
+
+Map<String, String> formatOutput(Map<String, String> input) {
+  final output = <String, String>{};
+  for (final i in input.entries) {
+    final keyVal = _applyRule(i.key);
+    if (output[keyVal] == null) {
+      final valueVal = _applyRule(i.value);
+      output[keyVal] = valueVal;
+    }
   }
   return output;
 }
 
-Future<void> saveOutput(Map<String, String> input) {
-  final output = formatOutput(jsonEncode(input));
+void saveOutput(Map<String, String> input) {
+  final output = jsonEncode(formatOutput(input));
   final config = deInjector.get<AppConfig>();
   final oFile = File(config.tempOutputFile);
-
-  // if (config.isForced) {
   verbosePrint('writing to temp file');
-  return oFile.writeAsString(output);
-  // } else {
-  //   print('output file found do you want to override it? (y/n)');
-  //   final input = stdin.readLineSync();
-  //   if (input == 'y') {
-  //     verbosePrint('output file found but forced to overwrite');
-  //     return oFile.writeAsString(output);
-  //   } else {
-  //     verbosePrint('output file found but not forced to overwrite');
-
-  //     exit(1);
-  //   }
-  // }
+  return oFile.writeAsStringSync(output);
 }
