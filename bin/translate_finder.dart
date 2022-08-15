@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:path/path.dart';
@@ -9,11 +10,7 @@ import 'package:translate_finder/features/save_output/save_output.dart';
 import 'package:translate_finder/features/update_current_locales/update_current_locales.dart';
 
 void main(List<String> arguments) {
-  coreApp(arguments);
-}
-
-void coreApp(List<String> args) {
-  final config = AppConfig.fromArgs(args);
+  final config = AppConfig.fromArgs(arguments);
   deInjector.register(config);
   doTheJob(config);
   if (config.watch) {
@@ -26,18 +23,32 @@ void activeWatch(AppConfig config) {
     final dir = Directory(join(config.workingDirectory, i));
     if (dir.existsSync()) {
       print('watching ${dir.path}');
-      dir.watch(events: FileSystemEvent.modify).listen((event) async {
-        print('change found in ${event.path}');
-        doTheJob(config, [event.path]);
-      });
+      dir
+          .watch(
+        events: FileSystemEvent.modify,
+        recursive: true,
+      )
+          .listen(
+        (event) async {
+          print('change found in ${event.path}');
+          doTheJob(
+            config,
+            overrideFiles: [event.path],
+          );
+        },
+      );
     } else {
       print('cannot watch ${dir.path} because it does not exists');
     }
   }
 }
 
-Future<void> doTheJob(AppConfig config, [List<String>? override]) async {
-  final samples = getTransTexts(override);
+Future<void> doTheJob(
+  AppConfig config, {
+  List<String>? overrideFiles,
+  List<String>? overrideSamples,
+}) async {
+  final samples = overrideSamples ?? getTransTexts(overrideFiles);
   final output = generateMap(samples);
   if (config.awaitForTasks) {
     await saveOutput(output);
