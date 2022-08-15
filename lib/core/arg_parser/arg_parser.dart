@@ -216,8 +216,9 @@ final appConfigParser = ArgParser(
         exit(64);
       }
     },
-    defaultsTo: r"(\$t\(([^}{<>\n])*\'\))",
-    valueHelp: 'regex pattern to find translations default bad-words are one of `}, {, < and >`',
+    defaultsTo: r"(\$t\(([^()\n])*\'\))",
+    valueHelp:
+        'regex pattern to find translations default bad-words are one of `) or (` this characters count as breaker',
   )
   ..addOption(
     'start_offset',
