@@ -16,7 +16,6 @@ class AppConfig {
     required this.watch,
     required this.regex,
     required this.localeDirectory,
-    required this.awaitForTasks,
   }) : assert(
           supportedExtensions.isNotEmpty,
         );
@@ -31,7 +30,6 @@ class AppConfig {
   final bool watch;
   final String localeDirectory;
   final String appVersion = '1.0.0';
-  final bool awaitForTasks;
 
   factory AppConfig.fromArgs(List<String> args) {
     final parseResult = appConfigParser.parse(args);
@@ -50,7 +48,6 @@ class AppConfig {
       endingOffset: int.tryParse(parseResult['end_offset']) ?? 0,
       startingOffset: int.tryParse(parseResult['start_offset']) ?? 0,
       regex: parseResult['regex'],
-      awaitForTasks: parseResult['await'],
     );
     final saveConfig = parseResult['save'] == true;
     switch (parseResult['config']) {
@@ -114,7 +111,6 @@ class AppConfig {
     String? tempOutputFile,
     bool? watch,
     String? localeDirectory,
-    bool? awaitForTasks,
   }) {
     return AppConfig(
       selectedDirectories: selectedDirectories ?? this.selectedDirectories,
@@ -126,7 +122,6 @@ class AppConfig {
       tempOutputFile: tempOutputFile ?? this.tempOutputFile,
       watch: watch ?? this.watch,
       regex: regex ?? this.regex,
-      awaitForTasks: awaitForTasks ?? this.awaitForTasks,
       localeDirectory: localeDirectory ?? this.localeDirectory,
     );
   }
@@ -142,7 +137,6 @@ class AppConfig {
       'startingOffset': startingOffset,
       'endingOffset': endingOffset,
       'watch': watch,
-      'awaitForTasks': awaitForTasks,
       'isVerbose': isVerbose,
       'appVersion': appVersion,
     };
@@ -159,7 +153,6 @@ class AppConfig {
       isVerbose: map['isVerbose'] ?? false,
       tempOutputFile: map['tempOutputFile'] ?? '',
       watch: map['watch'] ?? false,
-      awaitForTasks: map['awaitForTasks'] ?? true,
       regex: map['regex'] ?? '',
     );
   }
@@ -276,11 +269,6 @@ final appConfigParser = ArgParser(
     abbr: 'w',
     help: 'watch for changes in the working directory (this flag will cause the program to run in a loop)',
     defaultsTo: false,
-  )
-  ..addFlag(
-    'await',
-    help: 'awaits for file write queries',
-    defaultsTo: true,
   )
   ..addFlag(
     'verbose',

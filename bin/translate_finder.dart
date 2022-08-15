@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:path/path.dart';
@@ -10,7 +11,28 @@ import 'package:translate_finder/features/save_output/save_output.dart';
 import 'package:translate_finder/features/update_current_locales/update_current_locales.dart';
 
 void main(List<String> arguments) {
-  final config = AppConfig.fromArgs(arguments);
+  if (arguments.contains('--multi') || arguments.contains('-m')) {
+    final configsFile = File('translate_finder_configs_multi.json');
+    if (configsFile.existsSync()) {
+      final configs = configsFile.readAsStringSync();
+      final configsMap = jsonDecode(configs);
+
+      final configsList = (configsMap as List).map((e) => Map<String, dynamic>.from(e));
+      for (final configMap in configsList) {
+        final config = AppConfig.fromMap(configMap);
+        runApp(config);
+      }
+    } else {
+      print('No configs file found create one named `translate_finder_configs_multi.json`');
+      exit(64);
+    }
+  } else {
+    final config = AppConfig.fromArgs(arguments);
+    runApp(config);
+  }
+}
+
+void runApp(AppConfig config) {
   deInjector.register(config);
   doTheJob(config);
   if (config.watch) {
