@@ -229,7 +229,7 @@ final appConfigParser = ArgParser(
         exit(64);
       }
     },
-    defaultsTo: r"(\$t\(([^()\n])*\'\))",
+    defaultsTo: "(\\\$t\\((\\'|\\\")([^()\\n])*(\\'|\\\")\\))",
     valueHelp:
         'regex pattern to find translations default bad-words are one of `) or (` this characters count as breaker',
   )
@@ -280,11 +280,10 @@ final appConfigParser = ArgParser(
   ..addOption(
     'config',
     abbr: 'c',
-    defaultsTo: 'none',
+    defaultsTo: 'global',
     allowed: [
       'local',
       'global',
-      'none',
     ],
     help:
         '''config scope (in global scope the config will be saved next to executable file of translate_finder in this case ${Platform.resolvedExecutable})
