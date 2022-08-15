@@ -51,7 +51,7 @@ use `translate_finder -h` for more information.
 
 use `translate_finder --config local --save` to save current config into a `json` file
 
-```jsonc
+```JavaScript
 {
     // directories that will be searched for translations
     "selectedDirectories": [
