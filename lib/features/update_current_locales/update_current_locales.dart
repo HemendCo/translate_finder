@@ -10,8 +10,9 @@ import '../save_output/save_output.dart';
 Future<void> updateCurrentLocalesWith(Map<String, String> update) async {
   final config = deInjector.get<AppConfig>();
   final dir = Directory(config.localeDirectory);
-  if (await dir.exists()) {
-    await for (final file in dir.list(recursive: true)) {
+  if (dir.existsSync()) {
+    final files = dir.listSync(recursive: true);
+    for (final file in files) {
       if (file is File) {
         verbosePrint('found locale file in ${file.path}');
         final fileName = file.path.split('/').last;
