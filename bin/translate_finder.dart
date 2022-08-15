@@ -30,11 +30,13 @@ void activeWatch(AppConfig config) {
       )
           .listen(
         (event) async {
-          print('change found in ${event.path}');
-          doTheJob(
-            config,
-            overrideFiles: [event.path],
-          );
+          if (config.supportedExtensions.contains(event.path.split('.').last)) {
+            print('change found in ${event.path}');
+            doTheJob(
+              config,
+              overrideFiles: [event.path],
+            );
+          }
         },
       );
     } else {
@@ -50,11 +52,7 @@ Future<void> doTheJob(
 }) async {
   final samples = overrideSamples ?? getTransTexts(overrideFiles);
   final output = generateMap(samples);
-  if (config.awaitForTasks) {
-    await saveOutput(output);
-    await updateCurrentLocalesWith(output);
-  } else {
-    saveOutput(output);
-    updateCurrentLocalesWith(output);
-  }
+
+  saveOutput(output);
+  updateCurrentLocalesWith(output);
 }
