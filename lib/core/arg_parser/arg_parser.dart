@@ -290,10 +290,11 @@ final appConfigParser = ArgParser(
   ..addOption(
     'config',
     abbr: 'c',
-    defaultsTo: 'global',
+    defaultsTo: 'args',
     allowed: [
       'local',
       'global',
+      'args',
     ],
     help:
         '''config scope (in global scope the config will be saved next to executable file of translate_finder in this case ${Platform.resolvedExecutable})
