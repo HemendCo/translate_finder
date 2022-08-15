@@ -69,14 +69,23 @@ class AppConfig {
         if (saveConfig) {
           globalConfig = config;
         } else {
-          final cache = globalConfig;
-          config = cache.copyWith(
-            localeDirectory: config.localeDirectory,
-            workingDirectory: config.workingDirectory,
-            tempOutputFile: config.tempOutputFile,
-            watch: config.watch || cache.watch,
-            isVerbose: config.isVerbose || cache.isVerbose,
-          );
+          if (globalConfigFile.existsSync()) {
+            final cache = globalConfig;
+            config = cache.copyWith(
+              localeDirectory: config.localeDirectory,
+              workingDirectory: config.workingDirectory,
+              tempOutputFile: config.tempOutputFile,
+              watch: config.watch || cache.watch,
+              isVerbose: config.isVerbose || cache.isVerbose,
+            );
+          } else {
+            if (config.isVerbose) {
+              print('requested to get global config file but no config file provided');
+              print('maybe its first runtime so one will be created');
+            }
+            print('creating global config file at ${globalConfigFile.path}');
+            globalConfig = config;
+          }
         }
         break;
       default:
@@ -171,10 +180,11 @@ String get localAppConfigPath {
   return join(local, 'translate_finder_config.json');
 }
 
-AppConfig get globalConfig => AppConfig.fromJson(File(globalAppConfigPath).readAsStringSync());
+File globalConfigFile = File(globalAppConfigPath);
+AppConfig get globalConfig => AppConfig.fromJson(globalConfigFile.readAsStringSync());
 set globalConfig(AppConfig config) => File(globalAppConfigPath).writeAsStringSync(config.toJson());
-
-AppConfig get localConfig => AppConfig.fromJson(File(localAppConfigPath).readAsStringSync());
+final localConfigFile = File(localAppConfigPath);
+AppConfig get localConfig => AppConfig.fromJson(localConfigFile.readAsStringSync());
 set localConfig(AppConfig config) => File(localAppConfigPath).writeAsStringSync(config.toJson());
 
 final appConfigParser = ArgParser(
