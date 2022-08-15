@@ -12,8 +12,7 @@ class AppConfig {
     required this.workingDirectory,
     required this.startingOffset,
     required this.endingOffset,
-    required this.outputFile,
-    required this.isForced,
+    required this.tempOutputFile,
     required this.watch,
     required this.regex,
     required this.localeDirectory,
@@ -27,10 +26,10 @@ class AppConfig {
   final String regex; // = RegExp(r'(\$t\()(.*)(\))');
   final int startingOffset;
   final int endingOffset;
-  final String outputFile;
-  final bool isForced;
+  final String tempOutputFile;
   final bool watch;
   final String localeDirectory;
+  final String appVersion = '1.0.0';
 
   factory AppConfig.fromArgs(List<String> args) {
     final parseResult = appConfigParser.parse(args);
@@ -45,8 +44,7 @@ class AppConfig {
       isVerbose: parseResult['verbose'] == true,
       supportedExtensions: parseResult['extensions'] ?? [],
       workingDirectory: parseResult['directory'],
-      outputFile: parseResult['output'],
-      isForced: parseResult['force'] || parseResult['watch'],
+      tempOutputFile: parseResult['output'],
       endingOffset: int.tryParse(parseResult['end_offset']) ?? 0,
       startingOffset: int.tryParse(parseResult['start_offset']) ?? 0,
       regex: parseResult['regex'],
@@ -57,14 +55,25 @@ class AppConfig {
         if (saveConfig) {
           localConfig = config;
         } else {
-          config = localConfig;
+          final cache = localConfig;
+          config = cache.copyWith(
+            watch: config.watch || cache.watch,
+            isVerbose: config.isVerbose || cache.isVerbose,
+          );
         }
         break;
       case 'global':
         if (saveConfig) {
           globalConfig = config;
         } else {
-          config = globalConfig;
+          final cache = globalConfig;
+          config = cache.copyWith(
+            localeDirectory: config.localeDirectory,
+            workingDirectory: config.workingDirectory,
+            tempOutputFile: config.tempOutputFile,
+            watch: config.watch || cache.watch,
+            isVerbose: config.isVerbose || cache.isVerbose,
+          );
         }
         break;
       default:
@@ -79,7 +88,7 @@ class AppConfig {
 
   @override
   String toString() {
-    return 'AppConfig(selectedDirectories: $selectedDirectories, isVerbose: $isVerbose, supportedExtensions: $supportedExtensions, workingDirectory: $workingDirectory, startingOffset: $startingOffset, endingOffset: $endingOffset, outputFile: $outputFile, isForced: $isForced, watch: $watch, localeDirectory: $localeDirectory)';
+    return 'AppConfig(selectedDirectories: $selectedDirectories, isVerbose: $isVerbose, supportedExtensions: $supportedExtensions, workingDirectory: $workingDirectory, startingOffset: $startingOffset, endingOffset: $endingOffset, tempOutputFile: $tempOutputFile, watch: $watch, localeDirectory: $localeDirectory)';
   }
 
   AppConfig copyWith({
@@ -90,8 +99,7 @@ class AppConfig {
     int? startingOffset,
     int? endingOffset,
     String? regex,
-    String? outputFile,
-    bool? isForced,
+    String? tempOutputFile,
     bool? watch,
     String? localeDirectory,
   }) {
@@ -102,8 +110,7 @@ class AppConfig {
       workingDirectory: workingDirectory ?? this.workingDirectory,
       startingOffset: startingOffset ?? this.startingOffset,
       endingOffset: endingOffset ?? this.endingOffset,
-      outputFile: outputFile ?? this.outputFile,
-      isForced: isForced ?? this.isForced,
+      tempOutputFile: tempOutputFile ?? this.tempOutputFile,
       watch: watch ?? this.watch,
       regex: regex ?? this.regex,
       localeDirectory: localeDirectory ?? this.localeDirectory,
@@ -116,13 +123,13 @@ class AppConfig {
       'supportedExtensions': supportedExtensions,
       'workingDirectory': workingDirectory,
       'localeDirectory': localeDirectory,
+      'tempOutputFile': tempOutputFile,
+      'regex': regex,
       'startingOffset': startingOffset,
       'endingOffset': endingOffset,
-      'outputFile': outputFile,
-      'isVerbose': isVerbose,
-      'isForced': isForced,
-      'regex': regex,
       'watch': watch,
+      'isVerbose': isVerbose,
+      'appVersion': appVersion,
     };
   }
 
@@ -135,8 +142,7 @@ class AppConfig {
       endingOffset: map['endingOffset']?.toInt() ?? 0,
       localeDirectory: map['localeDirectory'] ?? '',
       isVerbose: map['isVerbose'] ?? false,
-      outputFile: map['outputFile'] ?? '',
-      isForced: (map['isForced'] ?? false) || (map['watch'] ?? false),
+      tempOutputFile: map['tempOutputFile'] ?? '',
       watch: map['watch'] ?? false,
       regex: map['regex'] ?? '',
     );
@@ -251,18 +257,12 @@ final appConfigParser = ArgParser(
   ..addFlag(
     'watch',
     abbr: 'w',
-    help:
-        'watch for changes in the working directory (this flag will cause the program to run in a loop with force mode on)',
+    help: 'watch for changes in the working directory (this flag will cause the program to run in a loop)',
     defaultsTo: false,
   )
   ..addFlag(
     'verbose',
     abbr: 'v',
-    defaultsTo: false,
-  )
-  ..addFlag(
-    'force',
-    abbr: 'f',
     defaultsTo: false,
   )
   ..addOption(
@@ -274,7 +274,21 @@ final appConfigParser = ArgParser(
       'global',
       'none',
     ],
-    help: 'config scope',
+    help:
+        '''config scope (in global scope the config will be saved next to executable file of translate_finder in this case ${Platform.resolvedExecutable})
+notes:
+  - in global scope values of 
+    - localeDirectory
+    - workingDirectory
+    - tempOutputFile
+    will be overwritten by values from args or default settings
+
+  - in both local and global scope values of
+    - isForced
+    - watch
+    - isVerbose
+    is result of "or (||)" of args and the config file.
+    if args is set to true then the loaded config value is ignored and wise versa''',
   )
   ..addFlag(
     'save',
