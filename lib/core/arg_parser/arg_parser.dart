@@ -5,6 +5,7 @@ import 'package:args/args.dart';
 import 'package:path/path.dart';
 
 import '../statics.dart';
+import 'clipboard_watcher_config.dart';
 
 class AppConfig {
   AppConfig({
@@ -18,6 +19,7 @@ class AppConfig {
     required this.watch,
     required this.regex,
     required this.localeDirectory,
+    this.clipWatcherConfig,
   }) : assert(
           supportedExtensions.isNotEmpty,
         );
@@ -31,6 +33,7 @@ class AppConfig {
   final String tempOutputFile;
   final bool watch;
   final String localeDirectory;
+  final ClipWatcherConfig? clipWatcherConfig;
   final String appVersion = '1.0.0';
 
   factory AppConfig.fromArgs(List<String> args) {
@@ -50,6 +53,12 @@ class AppConfig {
       endingOffset: int.tryParse(parseResult['end_offset']) ?? 0,
       startingOffset: int.tryParse(parseResult['start_offset']) ?? 0,
       regex: parseResult['regex'],
+      clipWatcherConfig: ClipWatcherConfig(
+        regex: parseResult['regex'],
+        interval: 150,
+        startingOffset: int.tryParse(parseResult['start_offset']) ?? 0,
+        endingOffset: int.tryParse(parseResult['end_offset']) ?? 0,
+      ),
     );
     final saveConfig = parseResult['save'] == true;
     switch (parseResult['config']) {
@@ -143,6 +152,7 @@ class AppConfig {
     String? tempOutputFile,
     bool? watch,
     String? localeDirectory,
+    ClipWatcherConfig? clipWatcherConfig,
   }) {
     return AppConfig(
       selectedDirectories: selectedDirectories ?? this.selectedDirectories,
@@ -154,6 +164,7 @@ class AppConfig {
       tempOutputFile: tempOutputFile ?? this.tempOutputFile,
       watch: watch ?? this.watch,
       regex: regex ?? this.regex,
+      clipWatcherConfig: clipWatcherConfig ?? this.clipWatcherConfig,
       localeDirectory: localeDirectory ?? this.localeDirectory,
     );
   }
@@ -171,6 +182,7 @@ class AppConfig {
       'watch': watch,
       'isVerbose': isVerbose,
       'appVersion': appVersion,
+      if (clipWatcherConfig != null) 'clipWatcherConfig': clipWatcherConfig?.toMap(),
     };
   }
 
@@ -186,6 +198,7 @@ class AppConfig {
       tempOutputFile: map['tempOutputFile'] ?? '',
       watch: map['watch'] ?? false,
       regex: map['regex'] ?? '',
+      clipWatcherConfig: map['clipWatcherConfig'] != null ? ClipWatcherConfig.fromMap(map['clipWatcherConfig']) : null,
     );
   }
 

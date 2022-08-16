@@ -5,3 +5,26 @@
 # Conventional directory for build output.
 build/
 .vscode/launch.json
+# Files and directories created by pub.
+.dart_tool/
+.packages
+
+# Conventional directory for build output.
+build/
+.vscode/launch.json
+translate_finder_configs_multi.json# Files and directories created by pub.
+.dart_tool/
+.packages
+
+# Conventional directory for build output.
+build/
+.vscode/launch.json
+# Files and directories created by pub.
+.dart_tool/
+.packages
+
+# Conventional directory for build output.
+build/
+.vscode/launch.json
+translate_finder_configs_multi.json
+translate_finder_config.json
