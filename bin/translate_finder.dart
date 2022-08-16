@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:path/path.dart';
 import 'package:translate_finder/core/arg_parser/arg_parser.dart';
 import 'package:translate_finder/core/dependency_injector/basic_dependency_injector.dart';
+import 'package:translate_finder/core/statics.dart';
 import 'package:translate_finder/features/generate_map/generate_map.dart';
 import 'package:translate_finder/features/get_translate_texts/get_translate_texts.dart';
 import 'package:translate_finder/features/save_output/save_output.dart';
@@ -12,7 +13,7 @@ import 'package:translate_finder/features/update_current_locales/update_current_
 
 void main(List<String> arguments) {
   if (arguments.contains('--multi') || arguments.contains('-m')) {
-    final configsFile = File('translate_finder_configs_multi.json');
+    final configsFile = File(multiConfigFile);
     if (configsFile.existsSync()) {
       final configs = configsFile.readAsStringSync();
       final configsMap = jsonDecode(configs);
@@ -23,7 +24,7 @@ void main(List<String> arguments) {
         runApp(config);
       }
     } else {
-      print('No configs file found create one named `translate_finder_configs_multi.json`');
+      print('No configs file found create one named `$multiConfigFile`');
       exit(64);
     }
   } else {

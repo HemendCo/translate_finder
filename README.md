@@ -3,16 +3,23 @@
 simple CLI application used to extract translations from source code.
 
 ```log
+
+-m --multi
+    use multiple configs placed in `translate_finder_configs_multi.json` 
+
+
 --extensions
     supported file extensions
     (defaults to "vue", "js", "ts")
 
 
---include                                                       directories to look for translations
+--include
+    directories to look for translations
     (defaults to "components", "pages")
 
 
--d,--directory                                                      (defaults to "Current Working directory")
+-d,--directory
+    (defaults to "Current Working directory")
 
 
 -l,
@@ -45,13 +52,16 @@ simple CLI application used to extract translations from source code.
 
 
 
--c,--config                                                                                          config scope
-                                                                            [local, global, none (default)]
+-c,--config
+    config scope
+    [local, global, none (default)]
 
--s,--[no-]save                                                                                       save the current config to local or global config
+-s,--[no-]save
+    save the current config to local or global config
 
 
--h, --help                                                                                   show this help message
+-h, --help
+    show this help message
 ```
 
 use `translate_finder -h` for more information.
@@ -60,33 +70,35 @@ use `translate_finder --config local --save` to save current config into a `json
 
 ```JavaScript
 {
-    // directories that will be searched for translations
+    /// directories that will be searched for translations
     "selectedDirectories": [
         "components",
         "pages"
     ],
-    // file extensions that will be searched for translations
+    /// file extensions that will be searched for translations
     "supportedExtensions": [
         "vue",
         "js",
         "ts"
     ],
-    // base directory to look for [selectedDirectories]
+    /// base directory to look for [selectedDirectories]
     "workingDirectory": "<SOME-DIR>",
-    // locales directory containing json file for different languages
+    /// locales directory containing json file for different languages
     "localeDirectory": "<SOME-DIR>/locales",
-    // temp output file for last scan results
+    /// temp output file for last scan results
     "tempOutputFile": "translations.json",
-    // show more information about the scan process
+    /// show more information about the scan process
     "isVerbose": true,
-    // cli will not exit after first full scan process instead it will stay in a loop and watch for changes in the working directory and files
+    /// cli will not exit after first full scan process instead it will stay in a loop and watch for changes in the working directory and files
     "watch": true,
-    // regex pattern to find translations in this case `...$t('some-key')...` will be extracted as `$t('some-key')`
+    /// regex pattern to find translations in this case `...$t('some-key')...` will be extracted as `$t('some-key')`
     "regex": "(\\$t\\(([^}{<>\\n])*\\'\\))",  
-    // select text after matching with given regex pattern with this starting offset by default is 4 because it starts with `$t('`
+    /// select text after matching with given regex pattern with this starting offset by default is 4 because it starts with `$t('`
     "startingOffset": 4,
-    // select text after matching with given regex pattern with this ending offset by default is -2 because it ends with `')`
-    "endingOffset": -2
+    /// select text after matching with given regex pattern with this ending offset by default is -2 because it ends with `')`
+    "endingOffset": -2,
+    /// show application's version used to migrate configs if needed
+    "appVersion": "1.0.0",
 }
 ```
 

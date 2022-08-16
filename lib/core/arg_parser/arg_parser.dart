@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:args/args.dart';
 import 'package:path/path.dart';
 
+import '../statics.dart';
+
 class AppConfig {
   AppConfig({
     required this.selectedDirectories,
@@ -54,6 +56,16 @@ class AppConfig {
       case 'local':
         if (saveConfig) {
           localConfig = config;
+          final multiConfig = File(multiConfigFile);
+          if (!multiConfig.existsSync()) {
+            File(multiConfigFile).writeAsStringSync(
+              jsonEncode(
+                [
+                  config.toMap(),
+                ],
+              ),
+            );
+          }
         } else {
           final cache = localConfig;
           config = cache.copyWith(
@@ -92,7 +104,27 @@ class AppConfig {
       print('app loaded in verbose mode on');
       print('app config is : $config');
     }
+    config.updateGitignore([
+      multiConfigFile,
+      localAppConfigPath.split('/').last,
+    ]);
+
     return config;
+  }
+  void updateGitignore(List<String> items) {
+    final gitignore = File(join(workingDirectory, '.gitignore'));
+
+    if (gitignore.existsSync()) {
+      for (final item in items) {
+        final lines = gitignore.readAsLinesSync();
+        if (!lines.contains(item)) {
+          gitignore.writeAsStringSync(
+            '${lines.join('\n')}\n$item',
+            mode: FileMode.append,
+          );
+        }
+      }
+    }
   }
 
   @override
@@ -165,12 +197,12 @@ class AppConfig {
 String get globalAppConfigPath {
   final exeFile = File(Platform.resolvedExecutable);
   final exeDir = exeFile.parent.path;
-  return join(exeDir, 'translate_finder_config.json');
+  return join(exeDir, basicConfigFileName);
 }
 
 String get localAppConfigPath {
   final local = Directory.current.path;
-  return join(local, 'translate_finder_config.json');
+  return join(local, basicConfigFileName);
 }
 
 File globalConfigFile = File(globalAppConfigPath);
@@ -260,7 +292,7 @@ final appConfigParser = ArgParser(
   )
   ..addOption(
     'output',
-    defaultsTo: 'translations.json',
+    defaultsTo: '.translations.json',
     valueHelp: 'output file path',
     abbr: 'o',
   )
