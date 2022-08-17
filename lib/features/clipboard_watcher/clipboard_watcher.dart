@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:dart_clipboard/dart_clipboard.dart';
+
+import 'clipboard_ffi.dart';
 
 class ClipboardWatcher extends Cubit<Iterable<String>> {
   ClipboardWatcher({
