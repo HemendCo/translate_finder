@@ -113,11 +113,11 @@ class AppConfig {
       print('app loaded in verbose mode on');
       print('app config is : $config');
     }
-    config.updateGitignore([
-      multiConfigFile,
-      localAppConfigPath.split('/').last,
-    ]);
-
+    config.updateGitignore(
+      [
+        config.tempOutputFile,
+      ],
+    );
     return config;
   }
   void updateGitignore(List<String> items) {

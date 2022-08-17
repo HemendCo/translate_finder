@@ -9,9 +9,11 @@ environment:
 dependencies:
   path: ^1.8.0
   args:
-  dart_clipboard: ^0.3.0
+  ffi: 2.0.1
   bloc: ^8.1.0
 
 dev_dependencies:
   lints: ^2.0.0
   test: ^1.16.0
+assets:
+  - libs/

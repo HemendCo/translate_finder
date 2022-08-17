@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:dart_clipboard/dart_clipboard.dart';
 import 'package:path/path.dart';
 import 'package:translate_finder/core/arg_parser/arg_parser.dart';
 import 'package:translate_finder/core/arg_parser/clipboard_watcher_config.dart';
@@ -45,7 +44,7 @@ void main(List<String> arguments) {
         final config = AppConfig.fromArgs([]);
         configsFile.writeAsStringSync(jsonEncode([config.toMap()]));
         print('generated config into `$multiConfigFile`');
-        exit(64);
+        exit(0);
       } else {
         print('No configs file found create one named `$multiConfigFile`');
         exit(64);
