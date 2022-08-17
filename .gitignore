@@ -28,3 +28,4 @@ build/
 .vscode/launch.json
 translate_finder_configs_multi.json
 translate_finder_config.json
+pubspec.lock
