@@ -3,6 +3,7 @@ import 'dart:ffi';
 import 'package:ffi/ffi.dart';
 import 'package:translate_finder/features/verbose_log/verbose_log.dart';
 
+/// rust libs can be found in (release)[https://github.com/FMotalleb/libclipboard/releases/tag/0.2.1]
 /// Type of set_contents method on Rust side.
 typedef RustSetContents = Void Function(Pointer<Utf8>);
 
