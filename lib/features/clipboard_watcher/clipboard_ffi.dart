@@ -57,8 +57,8 @@ class Clipboard {
   }
 
   static final List<String> _libDirs = [
-    Directory.current.path,
-    Platform.script.path,
+    // Directory.current.path,
+    // Platform.script.path,
     Platform.resolvedExecutable,
   ];
 
