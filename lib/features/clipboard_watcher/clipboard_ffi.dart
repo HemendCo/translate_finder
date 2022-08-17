@@ -57,8 +57,8 @@ class Clipboard {
   }
 
   static final List<String> _libDirs = [
-    // Directory.current.path,
-    // Platform.script.path,
+    Directory.current.path,
+    Platform.script.path,
     Platform.resolvedExecutable,
   ];
 
@@ -69,9 +69,11 @@ class Clipboard {
   /// If you call [_loadLib] from an unsupported platform, it throws
   /// PlatformException.
   static DynamicLibrary _loadLib() {
+    verbosePrint('hosting dirs `$_libDirs`');
     for (final dir in _libDirs) {
-      var libPath = dir.replaceAll(RegExp(r'[^/]+$'), '');
-
+      verbosePrint('try Loading libclipboard from `$dir`');
+      var libPath = dir.contains('.exe') ? dir.replaceAll(RegExp(r'[^/]+$'), '') : dir;
+      verbosePrint('try to find libclipboard inside `$libPath`');
       if (Platform.isWindows) {
         if (libPath[0] == '/') libPath = libPath.replaceFirst('/', '');
         libPath += 'libclipboard.dll';
